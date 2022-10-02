@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <title>Asiignment 2</title>
+      <script src="https://unpkg.com/jspsych@7.3.0"></script>
+      <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.1"></script>
+      <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.1"></script>
+      <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.1"></script>
+      <link href="https://unpkg.com/jspsych@7.3.0/css/jspsych.css" 
+            rel="stylesheet" type="text/css" />
+      <script src="list1.js"></script>
+      <script src="list2.js"></script>
+      <script src="list3.js"></script>
+      <script src="list4.js"></script>
+      <script src="practices.js"></script>
+      
+    </head>
+    
+    <body>
+      <script>
+          
+          var jsPsych = initJsPsych({
+                    on_finish: function() {
+                    jsPsych.data.displayData();
+          }
+          })
+          
+          var subject_id = Math.floor(Math.random()*100000)
+
+          var instruct1 ={
+                    type: jsPsychHtmlButtonResponse, 
+                    stimulus: 'Welcome to the experiment! Before starting the experiment, you are about to do some practice trials. Click on Continue to start practicing.', 
+                    choices: ['Continue'],
+                    data: {
+                    typeoftrial: 'instruct',
+                    list_number: jsPsych.timelineVariable('list'),
+                    trialcondition: jsPsych.timelineVariable( "prime_condition"),
+                    subject: subject_id
+                    }
+                  }
+          
+         var instruct2 ={
+                    type: jsPsychHtmlButtonResponse, 
+                    stimulus: 'The practice trials are over. Click on Continue to start the experiment', 
+                    choices: ['Continue'],
+                    data: {
+                    typeoftrial: 'instruct',
+                    list_number: jsPsych.timelineVariable('list'),
+                    trialcondition: jsPsych.timelineVariable( "prime_condition"),
+                    subject: subject_id
+                    }
+                  } 
+                  
+          
+          
+          
+          var sentence = { 
+                    type: jsPsychHtmlKeyboardResponse, 
+                    stimulus: jsPsych.timelineVariable('prompt'),
+                    trial_duration: 5000,
+                    data: {
+                    typeoftrial: 'sentence',
+                    list_number: jsPsych.timelineVariable('list'),
+                    trialcondition: jsPsych.timelineVariable( "prime_condition"),
+                    subject: subject_id
+                    }
+          }
+                    
+         
+          var prime = {
+                    type: jsPsychHtmlKeyboardResponse,
+                    stimulus: jsPsych.timelineVariable('prime_given'),
+                    trial_duration: 250,
+                    data: {   
+                    typeoftrial: 'prime',
+                    list_number: jsPsych.timelineVariable('list'),
+                    trialcondition: jsPsych.timelineVariable( "prime_condition"),
+                    subject: subject_id
+                    },
+          }
+
+          var answer= {
+                    type: jsPsychHtmlButtonResponse,
+                    stimulus:'', 
+                    choices: ["know", "don't know", "other word in mind", "tip of the tongue"],
+                    data: {
+                    typeoftrial: 'answer',
+                    list_number: jsPsych.timelineVariable('list'),
+                    trialcondition: jsPsych.timelineVariable( "prime_condition"),
+                    subject: subject_id
+                    }
+                  } 
+
+        
+          
+            
+          var response = {
+                    type: jsPsychSurveyText,
+                    questions: [
+                                {prompt: 'Please type your answer in the text box'}],
+                    data: {   
+                    typeoftrial: 'response',
+                    list_number: jsPsych.timelineVariable('list'),
+                    trialcondition: jsPsych.timelineVariable( "prime_condition"),
+                    subject: subject_id
+                    },
+          }
+          
+          var practice_procedure = {
+                    timeline: [sentence, prime, answer, sentence, response],
+                    timeline_variables: practicestimuli,
+                    randomize_order: true
+          }
+
+          
+          
+           var end_experiment = {
+                    type: jsPsychHtmlButtonResponse,
+                    stimulus: 'Thank you for participating! Click on Exit to end the experiment.',
+                    choice: ['Exit'],
+                    data: {
+                    typeoftrial: 'end',
+                    list_number: jsPsych.timelineVariable('list'),
+                    trialcondition: jsPsych.timelineVariable( "prime_condition"),
+                    subject: subject_id
+                    }
+          }
+           var list= [1, 2, 3, 4]
+           
+           var CONDITION = list[Math.floor(Math.random() * list.length)]
+           
+           var teststimuli = []
+           if(CONDITION == 1){teststimuli = list1}
+           else if(CONDITION == 2){teststimuli = list2}
+           else if(CONDITION == 3){teststimuli = list3}
+           else{teststimuli = list4}
+            
+           console.log("list=", list)
+           console.log("CONDITION=", CONDITION)
+           console.log("teststimuli=", teststimuli)
+
+           var experiment_procedure = {
+                    timeline: [sentence, prime, answer, sentence, response],
+                    timeline_variables: teststimuli,
+                    randomize_order: true
+          }
+          jsPsych.run([instruct1, practice_procedure, instruct2, experiment_procedure, end_experiment])
+          
+
+    
+      </script>
+    </body>
+</html>
