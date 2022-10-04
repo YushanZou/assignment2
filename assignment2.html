@@ -97,7 +97,7 @@
           var response = {
                     type: jsPsychSurveyText,
                     questions: [
-                                {prompt: 'Please type your answer in the text box'}],
+                                {prompt: jsPsych.timelineVariable('prompt')}],
                     data: {   
                     typeoftrial: 'response',
                     list_number: jsPsych.timelineVariable('list'),
@@ -107,7 +107,7 @@
           }
           
           var practice_procedure = {
-                    timeline: [sentence, prime, answer, sentence, response],
+                    timeline: [sentence, prime, answer, response],
                     timeline_variables: practicestimuli,
                     randomize_order: true
           }
@@ -140,7 +140,7 @@
            console.log("teststimuli=", teststimuli)
 
            var experiment_procedure = {
-                    timeline: [sentence, prime, answer, sentence, response],
+                    timeline: [sentence, prime, answer, response],
                     timeline_variables: teststimuli,
                     randomize_order: true
           }
